@@ -1,31 +1,32 @@
 
 import BookCreate from './Components/BookCreate'
 import BookList from './Components/BookList'
-import axios from 'axios'
 import { useState, useEffect } from 'react'
 import './app.css'
 import { fetchBook, createBook, deleteBook, updateBook } from './api'
 
 const App = () => {
   const [books, setBooks] = useState([])
-  
-const handleCreate = async(term) => {
-  const book = await createBook(term)
-  if (book) setBooks([...books, book])     
-}
-const handleDelete = async (id) => {
-  const book = await deleteBook(id)
-  setBooks(books.filter((item) => item.id !== book.id))
-}
-const handleUpdate = async (id, term) => {
-  const book = await updateBook(id, term)
-  setBooks(
-    books.map((item) =>item.id === book.id? book: item)
-  )
-}
-  useEffect(async () => {
-    const tams = await fetchBook()
+
+  const handleCreate = async (term) => {
+    const book = await createBook(term)
+    if (book) setBooks([...books, book])
+  }
+  const handleDelete = async (id) => {
+    const book = await deleteBook(id)
+    setBooks(books.filter((item) => item.id !== book.id))
+  }
+  const handleUpdate = async (id, term) => {
+    const book = await updateBook(id, term)
+    setBooks(
+      books.map((item) => item.id === book.id ? book : item)
+    )
+  }
+  useEffect(async () => { //được sử dụng để thực hiện việc fetch danh sách các cuốn 
+                          //sách từ server khi component App được render lần đầu tiên
+   const tams = await fetchBook()
     setBooks(tams)
+
   }, [])
   return (
     <div className='wrapper'>
@@ -33,7 +34,7 @@ const handleUpdate = async (id, term) => {
 
         <h1>Reading Book</h1>
         <div>
-          <BookList books={books} onDelete={handleDelete} onEdit={handleUpdate}/>
+          <BookList books={books} onDelete={handleDelete} onEdit={handleUpdate} />
         </div>
       </div>
       <BookCreate onCreate={handleCreate} />
